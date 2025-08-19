@@ -1,49 +1,57 @@
 # create_jwt.py README
 
-Bu script, MindSphere cihaz entegrasyonlarında kullanılmak üzere, X.509 sertifikalarıyla imzalanmış JWT token oluşturur.
+This script is designed to generate a JWT token signed with X.509 certificates for use in Siemens MindSphere device integrations or similar scenarios.
 
-## Kullanım
+## Usage
 
-Script’i çalıştırmak için aşağıdaki yapıyı takip edin:
+Run the script using the following command:
 
+```
 python create_jwt.py <device_name> <tenant_name>
+```
 
-**Parametreler:**
-- `<device_name>` : Cihaz adınızı belirtin. (Aynı isimde `.pem` ve `.key` dosyası olmalı)
-- `<tenant_name>` : Tenant adınızı belirtin. (Aynı isimde `.pem` dosyası olmalı)
+**Parameters:**
+- `<device_name>`: Specify your device name. (A `.pem` and `.key` file with the same name must exist)
+- `<tenant_name>`: Specify your tenant name. (A `.pem` file with the same name must exist)
 
-## Gerekli Dosyalar
+## Required Files
 
-Script’in düzgün çalışması için dizinde aşağıdaki dosyaların bulunması gerekir:
-- `<device_name>.pem` : Cihaza ait X.509 sertifikası (PEM formatında)
-- `<tenant_name>.pem` : Tenant’a ait X.509 sertifikası (PEM formatında)
-- `<device_name>.key` : Cihaza ait özel anahtar dosyası (PEM formatında)
+The following files must be present in the directory for the script to work properly:
+- `<device_name>.pem`: X.509 certificate for the device (in PEM format)
+- `<tenant_name>.pem`: X.509 certificate for the tenant (in PEM format)
+- `<device_name>.key`: Private key file for the device (in PEM format)
 
-## Script’in Yaptıkları
+## What the Script Does
 
-1. Komut satırından cihaz ve tenant ismini alır.
-2. İlgili sertifika dosyalarını okuyarak base64 olarak JWT `x5c` header’ına ekler.
-3. JWT payload’unu hazırlar (jti, iss, sub, aud, iat, exp, schemas, ten gibi alanlar içerir).
-4. Özel anahtarı kullanarak JWT’yi RS256 algoritmasıyla imzalar.
-5. İmzalanmış JWT’yi ekrana basar.
+1. Reads the device and tenant name from command line arguments.
+2. Reads the related certificate files and adds their base64-encoded content in the JWT `x5c` header.
+3. Prepares the JWT payload (fields such as jti, iss, sub, aud, iat, exp, schemas, ten).
+4. Signs the JWT using the private key with RS256 algorithm.
+5. Outputs the signed JWT token.
 
-## Bağımlılıklar
+## Dependencies
 
-Aşağıdaki Python paketlerinin kurulu olması gerekir:
+You need to have the following Python packages installed:
 - `PyJWT`
 - `cryptography`
 
-Kurulum için:
+To install, run:
 ```bash
 pip install pyjwt cryptography
+```
 
-Örnek Çalıştırma
+## Example Run
 
+```
 python create_jwt.py myDevice myTenant
+```
 
-Başarılı çalışmada çıktınız JWT token olacaktır.
-Notlar
+If successful, the output will be your signed JWT token.
 
-    Sertifika dosyalarınızın başlangıç ve bitiş satırları (-----BEGIN CERTIFICATE----- / -----END CERTIFICATE-----) kaldırılır, yalnızca base64 verisi kullanılır.
-    Token’in geçerlilik süresi 1 saattir (exp).
-    Gizli anahtar dosyanız şifresiz olmalı veya şifre alanını uyarlamalısınız.
+## Notes
+
+- The script strips the BEGIN/END lines (`-----BEGIN CERTIFICATE-----` / `-----END CERTIFICATE-----`) from your certificates and only uses the base64 data.
+- Token validity is 1 hour (`exp` claim).
+- Your private key file must be unencrypted or you need to adapt the code to handle encrypted keys.
+
+---
