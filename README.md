@@ -1,6 +1,6 @@
 # create_jwt.py README
 
-This script is designed to generate a JWT token signed with X.509 certificates for use in Siemens MindSphere device integrations or similar scenarios.
+This script is designed to generate a JWT token signed with X.509 certificates for use in MindSphere device integrations.
 
 ## Usage
 
